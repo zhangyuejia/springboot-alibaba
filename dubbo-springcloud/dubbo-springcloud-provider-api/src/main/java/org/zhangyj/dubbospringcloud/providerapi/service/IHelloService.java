@@ -1,4 +1,4 @@
-package org.zhangyj.dubbospringcloud.service;
+package org.zhangyj.dubbospringcloud.providerapi.service;
 
 /**
  * @author ZHANG-YJ
