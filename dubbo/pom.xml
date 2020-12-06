@@ -17,7 +17,7 @@
 
     <properties>
         <springboot.version>2.3.0.RELEASE</springboot.version>
-        <dubbo.version>2.7.8</dubbo.version>
+        <dubbo.version>2.7.3</dubbo.version>
     </properties>
 
     <dependencies>
@@ -31,6 +31,20 @@
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
             <version>${dubbo.version}</version>
+        </dependency>
+
+        <!-- 使用zk 做注册中心，Dubbo 需要的依赖 -->
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-dependencies-zookeeper</artifactId>
+            <version>${dubbo.version}</version>
+            <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

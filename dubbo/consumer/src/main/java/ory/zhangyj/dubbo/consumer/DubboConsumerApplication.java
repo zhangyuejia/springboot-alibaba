@@ -1,6 +1,6 @@
 package ory.zhangyj.dubbo.consumer;
 
-import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,7 +16,7 @@ import org.zhangyj.dubbo.dubboapi.service.IHelloService;
 @SpringBootApplication
 public class DubboConsumerApplication {
 
-    @DubboReference(url = "dubbo://192.168.149.1:20880/org.zhangyj.dubbo.dubboapi.service.IHelloService")
+    @Reference
     private IHelloService helloService;
 
     public static void main(String[] args) {
