@@ -1,4 +1,4 @@
-package ory.zhangyj.dubbo.provider.service;
+package org.zhangyj.dubbo.provider.service;
 
 import org.apache.dubbo.config.annotation.Service;
 import org.zhangyj.dubbo.dubboapi.service.IHelloService;

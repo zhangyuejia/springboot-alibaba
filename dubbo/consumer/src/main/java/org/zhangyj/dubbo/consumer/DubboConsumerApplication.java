@@ -1,4 +1,4 @@
-package ory.zhangyj.dubbo.consumer;
+package org.zhangyj.dubbo.consumer;
 
 import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
