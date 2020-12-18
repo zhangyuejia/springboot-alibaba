@@ -11,7 +11,7 @@ import org.zhangyj.dubbospringcloud.providerapi.service.IHelloService;
 @RestController
 public class HelloController {
 
-    @DubboReference(mock = "org.zhangyj.dubbospringloid.consumer.mock.service.MockHelloServiceImpl", cluster = "failfast")
+    @DubboReference(mock = "org.zhangyj.dubbospringloid.consumer.mock.service.MockHelloServiceImpl", cluster = "failover")
     private IHelloService helloService;
 
     @RequestMapping("say")
