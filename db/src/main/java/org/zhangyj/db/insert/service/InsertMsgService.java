@@ -3,6 +3,9 @@ package org.zhangyj.db.insert.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.zhangyj.db.bean.entity.InsertMsg;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * <p>
  *  服务类
@@ -18,6 +21,8 @@ public interface InsertMsgService extends IService<InsertMsg> {
      */
     int threadCount = 10;
 
+    int pageSize = 20000;
+
     /**
      * 插入
      * @param count 条数
@@ -25,4 +30,5 @@ public interface InsertMsgService extends IService<InsertMsg> {
     void insertMsg(int count) throws Exception;
 
 
+    List<InsertMsg> pageInsertMsg(AtomicInteger i, long minId, long maxId);
 }

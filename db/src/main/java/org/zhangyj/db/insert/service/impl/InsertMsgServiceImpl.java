@@ -1,9 +1,12 @@
 package org.zhangyj.db.insert.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 import org.zhangyj.db.bean.StopWatcher;
 import org.zhangyj.db.bean.entity.InsertMsg;
@@ -18,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <p>
@@ -31,6 +35,8 @@ import java.util.concurrent.CountDownLatch;
 @RequiredArgsConstructor
 @Service
 public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg> implements InsertMsgService {
+
+
 
     public static CountDownLatch latch = new CountDownLatch(threadCount);
 
@@ -107,5 +113,37 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
         if(list.size()> 0){
             saveBatch(list);
         }
+    }
+
+
+    @Override
+    public List<InsertMsg> pageInsertMsg(AtomicInteger i, long minId, long maxId) {
+        Page<InsertMsg> page;
+        List<InsertMsg> pageRecords = null;
+        List<InsertMsg> records = new ArrayList<>();
+        do{
+            LambdaQueryWrapper<InsertMsg> wrapper = new LambdaQueryWrapper<>();
+            // >
+            wrapper.gt(InsertMsg::getId, minId);
+            if(maxId > 0){
+                // <=
+                wrapper.le(InsertMsg::getId, maxId);
+            }
+            page = new Page<>();
+            page.setSearchCount(false);
+            page.setAsc("id");
+            page.setSize(pageSize);
+            page.setCurrent(1);
+            page(page, wrapper);
+            pageRecords = page.getRecords();
+            if(CollectionUtils.isEmpty(pageRecords)){
+                break;
+            }
+            records.addAll(pageRecords);
+            int count = i.addAndGet(records.size());
+            minId = records.get(records.size() - 1).getId();
+            log.info("查询条数：{} 当前分页：{}", count, page.getCurrent());
+        }while (pageRecords.size() == page.getSize());
+        return records;
     }
 }
