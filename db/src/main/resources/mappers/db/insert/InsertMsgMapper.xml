@@ -3,7 +3,7 @@
 <mapper namespace="org.zhangyj.db.insert.mapper.InsertMsgMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="org.zhangyj.db.insert.entity.InsertMsg">
+    <resultMap id="BaseResultMap" type="org.zhangyj.db.bean.entity.InsertMsg">
         <id column="ID" property="id" />
         <result column="NAME" property="name" />
         <result column="TYPE" property="type" />

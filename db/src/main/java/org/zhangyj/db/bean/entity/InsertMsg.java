@@ -1,4 +1,4 @@
-package org.zhangyj.db.insert.entity;
+package org.zhangyj.db.bean.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

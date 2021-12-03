@@ -1,7 +1,7 @@
 package org.zhangyj.db.insert.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.zhangyj.db.insert.entity.InsertMsg;
+import org.zhangyj.db.bean.entity.InsertMsg;
 
 /**
  * <p>

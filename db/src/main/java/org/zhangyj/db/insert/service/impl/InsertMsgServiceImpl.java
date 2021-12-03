@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 import org.zhangyj.db.bean.StopWatcher;
-import org.zhangyj.db.insert.entity.InsertMsg;
+import org.zhangyj.db.bean.entity.InsertMsg;
 import org.zhangyj.db.insert.mapper.InsertMsgMapper;
 import org.zhangyj.db.insert.service.InsertMsgService;
 import org.zhangyj.db.util.CloseUtil;

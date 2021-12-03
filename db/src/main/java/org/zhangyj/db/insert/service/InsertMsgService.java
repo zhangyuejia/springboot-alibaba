@@ -1,7 +1,7 @@
 package org.zhangyj.db.insert.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.zhangyj.db.insert.entity.InsertMsg;
+import org.zhangyj.db.bean.entity.InsertMsg;
 
 /**
  * <p>

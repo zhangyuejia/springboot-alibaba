@@ -36,7 +36,7 @@ public class TestInsert {
     @Test
     public void testInsertMsg() throws Exception {
         int threadCount = InsertMsgService.threadCount;
-        int count = 100 * 10000;
+        int count = 500 * 10000;
         StopWatch stopWatch = StopWatcher.watch(() -> {
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
             for (int i = 0; i < threadCount; i++) {
@@ -50,6 +50,7 @@ public class TestInsert {
             }
             InsertMsgServiceImpl.latch.await();
         });
+        // main插入条数：5000000 总耗时：106 速度：47148/s
         log.info(Thread.currentThread().getName() + "插入条数：{} 总耗时：{} 速度：{}/s", count, (int)stopWatch.getTotalTimeSeconds(), (int)(count/stopWatch.getTotalTimeSeconds()));
     }
 }
