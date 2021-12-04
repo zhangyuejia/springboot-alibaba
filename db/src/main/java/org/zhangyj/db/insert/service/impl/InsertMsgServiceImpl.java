@@ -140,9 +140,9 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
                 break;
             }
             records.addAll(pageRecords);
-            int count = i.addAndGet(records.size());
+            int count = i.addAndGet(pageRecords.size());
             minId = records.get(records.size() - 1).getId();
-            log.info("查询条数：{} 当前分页：{}", count, page.getCurrent());
+            log.info("总条数：{} 查询条数：{} 当前分页：{} 最大id:{}", count, pageRecords.size(), page.getCurrent(), minId);
         }while (pageRecords.size() == page.getSize());
         return records;
     }

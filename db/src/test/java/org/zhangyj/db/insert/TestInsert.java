@@ -36,7 +36,7 @@ public class TestInsert {
     @Test
     public void testInsertMsg() throws Exception {
         int threadCount = InsertMsgService.threadCount;
-        int count = 500 * 10000;
+        int count = 5000 * 10000;
         StopWatch stopWatch = StopWatcher.watch(() -> {
             ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
             for (int i = 0; i < threadCount; i++) {
