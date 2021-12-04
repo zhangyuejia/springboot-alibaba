@@ -1,10 +1,13 @@
 package org.zhangyj.db.insert.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
@@ -139,11 +142,42 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
             if(CollectionUtils.isEmpty(pageRecords)){
                 break;
             }
-            records.addAll(pageRecords);
+//            records.addAll(pageRecords);
             int count = i.addAndGet(pageRecords.size());
-            minId = records.get(records.size() - 1).getId();
+            minId = pageRecords.get(pageRecords.size() - 1).getId();
             log.info("总条数：{} 查询条数：{} 当前分页：{} 最大id:{}", count, pageRecords.size(), page.getCurrent(), minId);
         }while (pageRecords.size() == page.getSize());
         return records;
+    }
+
+    @Override
+    public List<InsertMsg> flowPageInsertMsg(AtomicInteger i, long minId, long maxId) {
+        List<InsertMsg> list = new ArrayList<>();
+        baseMapper.flowPageQuery(minId, maxId, resultContext -> {
+            InsertMsg msg = resultContext.getResultObject();
+            // 你可以看自己的项目需要分批进行处理或者单个处理，这里以分批处理为例
+            list.add(msg);
+            int count = i.incrementAndGet();
+            if (count % pageSize == 0) {
+                handle(i, list);
+            }
+        });
+        handle(i, list);
+        log.info("总条数：{} 查询条数：{}", i.get(), list.size());
+        return null;
+    }
+
+    /**
+     * 数据处理
+     */
+    private void handle(AtomicInteger i, List<InsertMsg> list){
+        log.info("总条数：{} 查询条数：{}", i.get(), list.size());
+        try{
+            // 在这里可以对你获取到的批量结果数据进行需要的业务处理
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            list.clear();
+        }
     }
 }

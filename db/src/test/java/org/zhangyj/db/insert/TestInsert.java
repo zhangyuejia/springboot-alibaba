@@ -51,6 +51,8 @@ public class TestInsert {
             InsertMsgServiceImpl.latch.await();
         });
         // main插入条数：5000000 总耗时：106 速度：47148/s
+        // main插入条数：50000000 总耗时：1249 速度：40003/s
+        // main插入条数：50000000 总耗时：1285 速度：38908/s
         log.info(Thread.currentThread().getName() + "插入条数：{} 总耗时：{} 速度：{}/s", count, (int)stopWatch.getTotalTimeSeconds(), (int)(count/stopWatch.getTotalTimeSeconds()));
     }
 }

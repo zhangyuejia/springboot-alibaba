@@ -31,4 +31,6 @@ public interface InsertMsgService extends IService<InsertMsg> {
 
 
     List<InsertMsg> pageInsertMsg(AtomicInteger i, long minId, long maxId);
+
+    List<InsertMsg> flowPageInsertMsg(AtomicInteger i, long minId, long maxId);
 }

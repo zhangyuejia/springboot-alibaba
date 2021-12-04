@@ -2,6 +2,11 @@ package org.zhangyj.db.select;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultType;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.mapping.ResultSetType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StopWatch;
 import org.zhangyj.db.bean.StopWatcher;
 import org.zhangyj.db.bean.entity.InsertMsg;
+import org.zhangyj.db.insert.mapper.InsertMsgMapper;
 import org.zhangyj.db.insert.service.InsertMsgService;
 
 import java.util.List;
@@ -23,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class TestSelect {
 
+    private InsertMsgMapper insertMsgMapper;
 
     @Autowired
     private InsertMsgService insertMsgService;
@@ -31,17 +38,16 @@ public class TestSelect {
     public void testSelectMsg() throws Exception {
         AtomicInteger i = new AtomicInteger(0);
         StopWatch stopWatch = StopWatcher.watch(() -> {
-//            // 单线程：main查询条数：5000000 分页条数：20000 总耗时：52 速度：94974/s
             // main查询条数：5000000 分页条数：20000 总耗时：75 速度：66653/s
-            // main查询条数：5000000 分页条数：20000 总耗时：77 速度：64375/s
+            // main查询条数：50000000 分页条数：20000 总耗时：533 速度：93638/s
 //            insertMsgService.pageInsertMsg(i, 0, -1);
 
-            // fork/join:
-            // main查询条数：5000000 分页条数：20000 总耗时：37 速度：132024/s
+            // fork/join: 速度在单线程2倍以上
             // main查询条数：5000000 分页条数：20000 总耗时：40 速度：123703/s
-            ForkJoinTask<List<InsertMsg>> task = new SelectMsgTask(insertMsgService, i, 0L, 500*10000L);
-            List<InsertMsg> result = ForkJoinPool.commonPool().invoke(task);
-
+            // main查询条数：50000000 分页条数：20000 总耗时：266 速度：187713/s
+//            ForkJoinTask<List<InsertMsg>> task = new SelectMsgTask(insertMsgService, i, 0L, 5000*10000L);
+//            List<InsertMsg> result = ForkJoinPool.commonPool().invoke(task);
+            insertMsgService.flowPageInsertMsg(i, 0, -1);
         });
         log.info(Thread.currentThread().getName() + "查询条数：{} 分页条数：{} 总耗时：{} 速度：{}/s", i.get(), InsertMsgService.pageSize, (int)stopWatch.getTotalTimeSeconds(), (int)(i.get()/stopWatch.getTotalTimeSeconds()));
     }
@@ -73,7 +79,7 @@ public class TestSelect {
             invokeAll(task1, task2);
             List<InsertMsg> list1 = task1.join();
             List<InsertMsg> list2 = task2.join();
-            list1.addAll(list2);
+//            list1.addAll(list2);
             return list1;
         }
     }
