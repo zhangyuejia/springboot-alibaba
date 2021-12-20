@@ -40,14 +40,15 @@ public class TestSelect {
         StopWatch stopWatch = StopWatcher.watch(() -> {
             // main查询条数：5000000 分页条数：20000 总耗时：75 速度：66653/s
             // main查询条数：50000000 分页条数：20000 总耗时：533 速度：93638/s
-//            insertMsgService.pageInsertMsg(i, 0, -1);
+            insertMsgService.pageInsertMsg(i, 0L, null);
 
             // fork/join: 速度在单线程2倍以上
             // main查询条数：5000000 分页条数：20000 总耗时：40 速度：123703/s
             // main查询条数：50000000 分页条数：20000 总耗时：266 速度：187713/s
-//            ForkJoinTask<List<InsertMsg>> task = new SelectMsgTask(insertMsgService, i, 0L, 5000*10000L);
-//            List<InsertMsg> result = ForkJoinPool.commonPool().invoke(task);
-            insertMsgService.flowPageInsertMsg(i, 0, -1);
+            // 流式查询 main查询条数：50000000 分页条数：20000 总耗时：243 速度：205440/s
+            ForkJoinTask<List<InsertMsg>> task = new SelectMsgTask(insertMsgService, i, 0L, 5000*10000L);
+            List<InsertMsg> result = ForkJoinPool.commonPool().invoke(task);
+//            insertMsgService.flowPageInsertMsg(i, 0, 500000);
         });
         log.info(Thread.currentThread().getName() + "查询条数：{} 分页条数：{} 总耗时：{} 速度：{}/s", i.get(), InsertMsgService.pageSize, (int)stopWatch.getTotalTimeSeconds(), (int)(i.get()/stopWatch.getTotalTimeSeconds()));
     }
@@ -70,7 +71,8 @@ public class TestSelect {
         @Override
         protected List<InsertMsg> compute() {
             if (maxId - minId <= THRESHOLD) {
-                return insertMsgService.pageInsertMsg(i, minId, maxId);
+//                return insertMsgService.pageInsertMsg(i, minId, maxId);
+                return insertMsgService.flowPageInsertMsg(i, minId, maxId);
             }
             // 任务太大,一分为二:
             long middle = (maxId + minId) / 2;

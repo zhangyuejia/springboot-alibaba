@@ -57,8 +57,8 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
         String exData = "12月2日，海淀区1名哈尔滨市来京人员核酸检测结果为阳性。经初步调查，该阳性人员常住哈尔滨市，11月26日与哈尔滨市确诊病例在密闭空间有接触，11月28日乘坐CZ2628航班从哈尔滨太平国际机场到达北京大兴国际机场，在京暂住地为海淀区琨御府东区7号楼。期间涉及在京行程轨迹如下：";
         StopWatch stopWatch = StopWatcher.watch(() -> {
             insertMsgByService(count, exData);
-            latch.countDown();
 //        insertMsgByJDBC(count, exData);
+            latch.countDown();
         });
         log.info(Thread.currentThread().getName() + "插入条数：{} 耗时：{}", count, stopWatch.getTotalTimeSeconds());
     }
@@ -120,16 +120,16 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
 
 
     @Override
-    public List<InsertMsg> pageInsertMsg(AtomicInteger i, long minId, long maxId) {
+    public List<InsertMsg> pageInsertMsg(AtomicInteger i, Long minId, Long maxId) {
         Page<InsertMsg> page;
-        List<InsertMsg> pageRecords = null;
+        List<InsertMsg> pageRecords;
         List<InsertMsg> records = new ArrayList<>();
         do{
             LambdaQueryWrapper<InsertMsg> wrapper = new LambdaQueryWrapper<>();
-            // >
-            wrapper.gt(InsertMsg::getId, minId);
-            if(maxId > 0){
-                // <=
+            if(minId != null){
+                wrapper.gt(InsertMsg::getId, minId);
+            }
+            if(maxId != null){
                 wrapper.le(InsertMsg::getId, maxId);
             }
             page = new Page<>();
@@ -151,7 +151,7 @@ public class InsertMsgServiceImpl extends ServiceImpl<InsertMsgMapper, InsertMsg
     }
 
     @Override
-    public List<InsertMsg> flowPageInsertMsg(AtomicInteger i, long minId, long maxId) {
+    public List<InsertMsg> flowPageInsertMsg(AtomicInteger i, Long minId, Long maxId) {
         List<InsertMsg> list = new ArrayList<>();
         baseMapper.flowPageQuery(minId, maxId, resultContext -> {
             InsertMsg msg = resultContext.getResultObject();

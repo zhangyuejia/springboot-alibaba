@@ -30,7 +30,7 @@ public interface InsertMsgService extends IService<InsertMsg> {
     void insertMsg(int count) throws Exception;
 
 
-    List<InsertMsg> pageInsertMsg(AtomicInteger i, long minId, long maxId);
+    List<InsertMsg> pageInsertMsg(AtomicInteger i, Long minId, Long maxId);
 
-    List<InsertMsg> flowPageInsertMsg(AtomicInteger i, long minId, long maxId);
+    List<InsertMsg> flowPageInsertMsg(AtomicInteger i, Long minId, Long maxId);
 }

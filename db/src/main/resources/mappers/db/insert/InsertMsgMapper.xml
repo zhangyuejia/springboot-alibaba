@@ -21,13 +21,12 @@
         truncate table  INSERT_MSG
     </delete>
 
-    <select id="flowPageQuery" resultType="org.zhangyj.db.bean.entity.InsertMsg" resultSetType="FORWARD_ONLY" fetchSize="1000">
+    <select id="flowPageQuery" resultType="org.zhangyj.db.bean.entity.InsertMsg" resultSetType="FORWARD_ONLY"  fetchSize="-2147483648">
         select * from INSERT_MSG
         <where>
             id > #{minId}
             <if test="maxId > 0">
                 and id <![CDATA[ <= ]]> #{maxId}
-
             </if>
         </where>
     </select>
